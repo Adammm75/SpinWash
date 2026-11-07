@@ -20,5 +20,5 @@ for(const [slot,part] of slots){
   rows+=`        </tr>\n`;
 }
 let head="";
-for(const [abbr] of days) head+=`          <th scope="col"${abbr==="Dim"?' class="is-sun"':""}>${abbr}</th>\n`;
+for(const [abbr] of days) head+=`          <th scope="col"${abbr==="Dim"?' class="sun"':""}>${abbr}</th>\n`;
 process.stdout.write(`          <th scope="col"><span class="sr">Créneau</span></th>\n${head}@@SPLIT@@${rows}`);

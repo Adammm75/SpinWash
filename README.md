@@ -71,6 +71,37 @@ tools/gen-planning.mjs  Régénère la grille de créneaux
 Un prix modifié doit l'être à **deux endroits** : la carte de la formule et l'attribut
 `data-price` du devis interactif.
 
+## Direction artistique
+
+« Atelier nocturne » : un noir profond que la lumière balaie. La typographie display porte un
+dégradé métallique (`.chrome`), le rouge de la charte sert de repère — rails, chiffres,
+accents — et une seule bande claire, celle du devis, coupe le parcours au moment de décider.
+
+| Rôle | Police | Usage |
+|---|---|---|
+| Display | **Archivo** (variable, axe `wdth`) | Titres larges et lourds ; la largeur se resserre sous 560 px |
+| Texte | **Inter Tight** | Paragraphes et champs |
+| Données | **JetBrains Mono** | Libellés, prix, horaires, numéros |
+
+Les couleurs sont toutes définies en variables dans le `:root` de `index.html`.
+
+## Animations
+
+Toutes passent par `prefers-reduced-motion` : si le visiteur a demandé moins de mouvement,
+la page devient statique sans rien perdre.
+
+- Titres révélés ligne par ligne, apparitions décalées des cartes et des listes
+- Balayage de lumière sur le hero, les boutons et les cartes
+- Parallaxe sur la photo du hero, barre de progression, rail de section à gauche
+- **Section « méthode » épinglée** : les quatre étapes défilent sur place, avec rail de
+  progression ; sur mobile, chacune s'allume à son passage
+- Compteurs animés, total du devis qui réagit au changement, boutons magnétiques,
+  projecteur qui suit le curseur sur les cartes
+- En-tête qui s'efface en descendant et revient en remontant
+
+Au repos, tout est visible : rien n'attend un défilement pour s'afficher, et un filet de
+sécurité lève toute animation restée en suspens.
+
 ## Ce que fait la page
 
 - **Devis interactif** — formule, véhicule, options et créneau ; le total se met à jour et
@@ -78,15 +109,23 @@ Un prix modifié doit l'être à **deux endroits** : la carte de la formule et l
 - **Formulaire de réservation** — validation native, case de consentement RGPD, message
   WhatsApp construit avec `encodeURIComponent` et ouvert par un vrai lien (jamais
   `window.open`, qui échoue silencieusement derrière un bloqueur).
-- **Grille de planning** — 28 créneaux cliquables, chacun pré-remplissant jour et heure.
+- **Planning adaptatif** — grille de 28 créneaux sur grand écran ; sous 760 px, un sélecteur
+  de jour et quatre grands boutons, ouvert sur la journée en cours. Le sélecteur est construit
+  à partir du tableau : aucun contenu n'est dupliqué dans le HTML.
+- **Carrousels tactiles** — formules et avis défilent à l'horizontale sur mobile, avec
+  accroche au centre.
 - **Accessibilité** — lien d'évitement, navigation au clavier, `aria-expanded` sur
-  l'accordéon, fermeture par Échap, retour du focus, respect de `prefers-reduced-motion`.
+  l'accordéon, `aria-pressed` sur le sélecteur de jour, fermeture par Échap, retour du focus,
+  cibles tactiles d'au moins 44 px.
 - **Référencement** — données structurées `AutoWash` et `FAQPage`, Open Graph complet,
   sitemap, titres hiérarchisés.
 
 ## Tests
 
-Les vérifications passées sur cette version (Playwright) :
-calcul du devis, encodage des URL WhatsApp avec caractères spéciaux, accordéon FAQ, blocage du
-formulaire incomplet, tiroir mobile, visionneuse photo, validité des 28 liens de planning,
-absence de débordement horizontal à 390 px, absence d'erreur console.
+Vérifications passées sur cette version (Playwright) : calcul du devis, encodage des URL
+WhatsApp avec caractères spéciaux, compteurs, accordéon FAQ, progression de la section
+épinglée, blocage du formulaire incomplet, tiroir mobile, visionneuse photo, validité des
+28 liens de planning, sélecteur de jour mobile (7 jours, 4 créneaux, ouverture sur
+aujourd'hui, message du dimanche sur place).
+
+Aucun débordement horizontal ni erreur console à 1440, 820, 390 et 360 px.
